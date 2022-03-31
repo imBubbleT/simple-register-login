@@ -1,61 +1,89 @@
 #include <iostream>
+#include <fstream>
 #include <string>
 
 using namespace std;
 
-string username;
-string password;
+void create();
+void login();
 
-string login;
-string passCheck;
+string user;
+string pass;
 
-string lineBuffer;
+string luser;
+string lpass;
 
-int loginAttempt = 0;
-int i = loginAttempt;
+ofstream wdata;
+ifstream rdata;
 
-void loginSession();
+string menuSelect;
+
 
 int main()
 {
-    cout << "Create a username: ";
-    getline(cin, username);
-    cout << "Create a password: ";
-    getline(cin, password);
+	do{
+		cout << "Type your selection(create/login/exit): ";
+		getline(cin, menuSelect);
 
-    loginSession();
 
-    if(i >= 5){
-        cout << "Too many login attempts...\n";
-    }
-
+		if(menuSelect == "create"){
+			create();
+		}
+		else if(menuSelect == "login"){
+			login();
+		}
+		else if(menuSelect == "exit"){
+			cout << "Exiting session...\n\n";
+		}
+		else{
+			cout << "Invalid selection\n\n";
+		}
+	}
+	while(menuSelect != "exit");
     return 0;
 }
 
-void loginSession()
+// Create a username and password session
+void create()
 {
-    do
-    {
-        system("cls");
+	wdata.open("Data.txt");
 
-        cout << "Enter username: ";
-      //  cin >> login;
-        getline(cin, login);
-        cout << "Enter password: ";
-        //cin >> passCheck;
-        getline(cin, passCheck);
+    cout << "Create username: ";
+	getline(cin, user);
 
-        i++;
+    wdata << user << endl;
 
-        if(username != login || password != passCheck){
-            cout << "\nIncorrect username or password...\n";
-        }
-        if((username == login) && (password == passCheck)){
-            cout << "\nLogin successful...\n";
-        }
-        getline(cin, lineBuffer); //Curent solution to avoid Username be skipped at certain occasion
-    }
-    while((username != login || password != passCheck) && i < 5);
+    cout << "Create password: ";
+    getline(cin, pass);
 
+    wdata << pass << endl;
+
+    wdata.close();
+
+    cout << "Username and password created!\n\n";
 }
 
+// Login session
+void login()
+{
+    rdata.open("Data.txt");
+
+    cout << "Enter username: ";
+    getline(cin, luser);
+
+    cout << "Enter password: ";
+    getline(cin, lpass);
+
+    rdata >> user;
+    rdata >> pass;
+
+    rdata.close();
+
+
+    if((user == luser) && (pass == lpass)){
+		cout << "Login succesful!\n\n";
+    }else{
+		cout << "Invalid username or password...\n\n";
+    }
+
+}
